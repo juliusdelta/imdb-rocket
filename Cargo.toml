@@ -1,0 +1,8 @@
+[package]
+name = "imdb-rocket"
+version = "0.1.0"
+authors = ["JD Gonzales <jd_gonzales@icloud.com>"]
+
+[dependencies]
+rocket = "0.3.0"
+rocket_codegen = "0.3.0"
