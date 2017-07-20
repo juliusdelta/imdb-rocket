@@ -1,0 +1,7 @@
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR NOT NULL,
+  rating VARCHAR NOT NULL,
+  director VARCHAR NOT NULL,
+  score INTEGER NOT NULL
+)
