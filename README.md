@@ -1,6 +1,6 @@
 # Rust Rocket Api
 
-A simple API built on Rust using Rocket and Diesel.
+#### A simple API built on Rust using Rocket and Diesel.
 ======================================================
 
 ## Installation
