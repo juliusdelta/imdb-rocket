@@ -1,50 +1,40 @@
 #![feature(plugin)]
 #![plugin(rocket_codegen)]
-
 extern crate rocket;
-extern crate serde;
+#[macro_use]
+extern crate diesel;
+#[macro_use]
+extern crate diesel_codegen;
+extern crate dotenv;
 extern crate serde_json;
-
-extern crate rocket_contrib;
-
+#[macro_use]
+extern crate lazy_static;
+#[macro_use] extern crate rocket_contrib;
 #[macro_use]
 extern crate serde_derive;
+extern crate r2d2;
+extern crate r2d2_diesel;
 
-use rocket_contrib::Json;
+mod schema;
+mod db;
+mod movie;
+mod models;
+mod error;
 
-#[derive(Serialize, Deserialize)]
-#[derive(Debug)]
-struct Movie {
-    id: i32,
-    title: String,
-    rating: String,
-    director: String,
-    score: i32
-}
+use db::DB;
+use movie::{get_movies};
+use models::*;
+use rocket::JSON;
+use rocket::response::status::{Created, NoContent};
+use error::Error as ApiError;
 
-impl Movie {
-    fn new (id: i32, title: String, rating: String, director: String, score: i32) -> Movie {
-        Movie {
-            id: id,
-            title: String::from(title),
-            rating: String::from(rating),
-            director: String::from(director),
-            score: score
-        }
-    }
-}
-
-#[get("/movies")]
-fn movie() -> Json<Movie> {
-    let title = String::from("The Matrix");
-    let rating = String::from("R");
-    let director = String::from("The Wachowski's");
-
-    Json(Movie::new(1, title, rating, director, 87))
+#[get("/movies", format = "application/json")]
+fn movies_get(db: DB) -> Result<JSON<Vec<Movie>, ApiError>> {
+    let movies = Json(json!({get_movies(db.conn())}))?;
 }
 
 fn main() {
     rocket::ignite()
-        .mount("/", routes![movie])
+        .mount("/", routes![movies_get])
         .launch();
 }
